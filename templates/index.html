@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Introduction</h1>
+    <p>This app was created to provide Okta engineers a quick and easy way to acquire a valid TLD for their POCs.
+    Domains are free to use and are valid for 1-12 months. </p>
+    <p>These domains are usable to configure domains for Office 365, Okta Custom Domain, Salesforce Custom Domains, etc...</p>
+    <h2>What about DNS entries?</h2>
+    <p>At this time, you must self-manage DNS using Cloudflare or another DNS provider. In future versions, I plan to integrate
+    DNS functionality directly against the service. Cloudflare is free, provides a very nice user interface, and boasts many features such as DNS proxying and DDoS protection.</p>
+    <h3>Do I/We/Okta own this domain?</h3>
+    <p>No. The domain service used is called Freenom. They provide free domains against a specific set of TLDs, but they retain
+    ownership of the domain. You are simply "using it". This is typically not an issue for a POC, which is short lived.</p>
+<h1>Cool. How do I use it?</h1>
+    <p>All you have to do is register with your Okta e-mail address. Once approved, you will be able to create and update domains as necessary.</p>
+<h1 style="align-self: center">Let's go.</h1>
+    <form method="get" action="login">
+        <button id="login-button" class="btn btn-primary" type="submit">Login</button>
+    </form>
+{% endblock content %}
