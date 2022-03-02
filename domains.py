@@ -3,7 +3,8 @@ import xmltodict
 
 
 class Domains:
-    def __init__(self, base_url, api_key):
+    def __init__(self, config, base_url, api_key):
+        self.config = config
         self.api_key = api_key
         self.base_url = base_url
 
@@ -13,19 +14,29 @@ class Domains:
         resource = '/service/ping'
         response = self.conn.get(self.base_url + resource)
         response_xml = xmltodict.parse(response)
-        return response
+        return response_xml
 
-    def register(self):
+    def register(self, domain, period_length, nameservers):
+        request_body = {"domain": domain, "domaintype": "FREE", "period" : period_length, "nameservers" : nameservers}
         resource = '/domain/register'
-        response = self.conn.get(self.base_url + resource)
+        response = self.conn.post(self.base_url + resource, data=request_body)
         response_xml = xmltodict.parse(response)
-        return response
+        return response_xml
 
     def search_domain(self, domain, *args, **kwargs):
         resource = '/domain/search.xml'
         url = self.base_url + resource
-        params = {'domainname': domain, 'domaintype': "paid"}
+        params = {'domainname': domain, 'domaintype': "free"}
         response = self.conn.get(url=url, params=params)
-        response_dict = xmltodict.parse(response)
-        domain_state = response_dict['freenom']['result']
-        return domain_state
+        domain_state = xmltodict.parse(response)
+        if domain_state["freenom"]["result"] == "DOMAIN AVAILABLE":
+            return True
+        else:
+            return False
+
+    def request_domain(self, domain):
+        try:
+            if self.search_domain(domain):
+                self.register(domain)
+        except ConnectionError:
+            print("Could not request domain. Is it taken?")
